@@ -194,34 +194,8 @@ shocks;
 	var eta_i;	stderr 0.01;
 	var eta_r;	stderr 0.01;
 end;
+	
+resid(1);
+check;
 
-
-%% J'essaie de recopier le tp3
-
-% check residuals
-resid;
-
-varobs gy_obs pi_obs r_obs gc_obs gi_obs;
-
-%%% estimation of the model
-estimation(datafile=myobs,^$	% your datafile, must be in your current folder
-first_obs=1,				% First data of the sample
-mode_compute=4,				% optimization algo, keep it to 4
-mh_replic=5000,				% number of sample in Metropolis-Hastings
-mh_jscale=0.5,				% adjust this to have an acceptance rate between 0.2 and 0.3
-prefilter=1,				% remove the mean in the data
-lik_init=2,					% Don't touch this,
-mh_nblocks=1,				% number of mcmc chains
-forecast=8					% forecasts horizon
-) gy_obs pi_obs r_obs gc_obs gi_obs;
-
-stoch_simul(irf=30,conditional_variance_decomposition=[1,4,10,100],order=1) gy_obs pi_obs r_obs;
-
-shock_decomposition lny pi_obs r_obs;
-
-
-% Je mets ça en commentaire pour l'instant	
-%resid(1);
-%check;
-
-%stoch_simul(irf=30,order=1) y c i pi r u x ;
+stoch_simul(irf=30,order=1) y c i pi r u x ;
