@@ -106,4 +106,18 @@ xlim([min(T) max(T)]);
 title('prix ETS')
 
 
+%% Stationarity tests
+%  We run the Kwiatkowski, Phillips, Schmidt, and Shin (KPSS) test to check
+%  for stationarity 
 
+h_gy = kpsstest(gy_obs) ;
+h_gc = kpsstest(gc_obs) ;
+h_gi = kpsstest(gi_obs) ;
+h_pi = kpsstest(pi_obs) ;
+h_pe = kpsstest(pe_obs) ;
+
+% All variables are stationary except for investment. For this variable, we
+% perform an ADF test
+
+h_gi_adf = adftest(gi_obs)
+% We can reject the null hypothesis of a unit root against the autoregressive alternative.
