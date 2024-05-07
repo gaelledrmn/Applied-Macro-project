@@ -198,10 +198,33 @@ end;
 
 %% J'essaie de recopier le tp3
 
-% check residuals
-resid;
+estimated_params;
+//	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
+	stderr eta_g,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_g,				.92,    	,		,		beta_pdf,			.5,				0.2;
+	stderr eta_p,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_p,				.92,    	,		,		beta_pdf,			.5,				0.2;
+	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
+	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_c,				.96,    		,		,		beta_pdf,			.5,				0.2;
+	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
+	
 
-varobs gy_obs pi_obs r_obs gc_obs gi_obs;
+	sigmaC,				2,    		,		,		normal_pdf,			1.5,				.35;
+	sigmaH,				0.8,   	 	,		,		gamma_pdf,			2,				0.5;
+	hh,					.34,    		,		,		beta_pdf,			.75,			0.1;
+	kappa,				6,    		,		,		gamma_pdf,			4,				1.5;
+	xi,					106,    	0,		,		gamma_pdf,			100,				15;
+	rho,				.45,    	,		,		beta_pdf,			.75,				0.1;
+	phi_pi,				1.8,    	,		,		gamma_pdf,			1.5,				0.25;
+	phi_y,				0.05,    	,		,		gamma_pdf,			0.12,				0.05;
+	phi_dy,				0.02,    	,		,		normal_pdf,			0.12,				0.05;
+%	alpha,				0.25,    	,		,		beta_pdf,			0.3,				.05;
+
+end;
+
 
 %%% estimation of the model
 estimation(datafile=myobs,^$	% your datafile, must be in your current folder
@@ -215,9 +238,25 @@ mh_nblocks=1,				% number of mcmc chains
 forecast=8					% forecasts horizon
 ) gy_obs pi_obs r_obs gc_obs gi_obs;
 
+
+% load estimated parameters
+fn = fieldnames(oo_.posterior_mean.parameters);
+for ix = 1:size(fn,1)
+	set_param_value(fn{ix},eval(['oo_.posterior_mean.parameters.' fn{ix} ]))
+end
+% load estimated shocks
+fx = fieldnames(oo_.posterior_mean.shocks_std);
+for ix = 1:size(fx,1)
+	idx = strmatch(fx{ix},M_.exo_names,'exact');
+	M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
+end
+
 stoch_simul(irf=30,conditional_variance_decomposition=[1,4,10,100],order=1) gy_obs pi_obs r_obs;
 
-shock_decomposition lny pi_obs r_obs;
+
+
+
+
 
 
 % Je mets ça en commentaire pour l'instant	

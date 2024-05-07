@@ -19,9 +19,9 @@ mean_pe_obs = splitapply(@mean, ETSprice_month{:, 2}, findgroups(ETS_quarters));
 % Créer la base de données avec le trimestre et l'année et la moyenne trimestrielle
 ETSprice_quart = table(unique(ETS_quarters), mean_pe_obs, 'VariableNames', {'date', 'pe_obs'});
 
-% Ajouter le trimestre précédent pour le calcul des lag dans dbnomics
-new_row = table(dateshift(ETSprice_quart.date(1), 'start', 'quarter', -1), NaN, 'VariableNames', {'date', 'pe_obs'});
-ETSprice_quart = [new_row; ETSprice_quart];
+%Ajouter le trimestre précédent pour le calcul des lag dans dbnomics
+%new_row = table(dateshift(ETSprice_quart.date(1), 'start', 'quarter', -1), NaN, 'VariableNames', {'date', 'pe_obs'});
+%ETSprice_quart = [new_row; ETSprice_quart];
 
 
 %% Transform dbnomics data
@@ -49,11 +49,13 @@ u_obs	= dbnomics(2:end,6);
 % inflation rate
 pi_obs  = diff(log(def));
 
+% prix ETS : je normalise au prix ETS de 2015, puis taux de croissance
+pe_obs = table2array(ETSprice_quart(:,2));
+pe_obs = pe_obs/pe_obs(id2015,1);
+pe_obs  = diff(log(pe_obs));
+
 % quarterly interest rate
 r_obs	= dbnomics(2:end,7)/400;
-
-% prix ETS
-pe_obs = table2array(ETSprice_quart(2:end,2));
 
 % date
 T = T(2:end);
