@@ -24,13 +24,13 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 %----------------------------------------------------------------
 % 2. Calibration
 %----------------------------------------------------------------
-delta_N = .1;		% separation rate
+delta_N = .17;		% separation rate
 eta		= .5;		% negotiation share
 phi		= 0.05;		% shape hiring cost function
 beta 	= 0.993; 	% Discount factor firms
 delta 	= 0.025;	% Depreciation rate
-alpha 	= 0.30;		% Capital share
-gy 		= 0.2;   	% Public spending in GDP
+alpha 	= 0.35;		% Capital share
+gy 		= 0.55;   	% Public spending in GDP
 sigmaC 	= 1;		% Consumption risk aversion
 sigmaL 	= 2; 		% Elasticity of labor
 epsilon = 10;		% Elasticity between goods
@@ -40,13 +40,13 @@ phi_pi	= 1.5;		% Monetary policy reaction to inflation
 xi 		= 80;		% Adjustment costs on prices
 kappa	= 4;		% adjustment costs on investment
 gamma	= .85;		% unemployment insurance as % of real wage
-varphi	= 0.2;		% elasticity of emission to GDP
+varphi	= 0.15;		% elasticity of emission to GDP
 piss	= 1.005;	% steady state inflation
 
 % value of main variables:
 tau0 	= 50 /1000;	% value of carbon tax ($/ton)
-sig		= 0.2; 		% Carbon intensity USA 0.2 Gt / Trillions USD
-y0	 	= 25;		% trillions usd PPA https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
+sig		= 0.25; 	% Carbon intensity 0.25 Gt / Trillions USD
+y0	 	= 2.6;		% trillions usd PPA 
 theta1  = 0.05;		% level of abatement costs
 theta2  = 2.6;		% curvature abatement cost
 Hss		= 1/3;		% labor supply in ss
