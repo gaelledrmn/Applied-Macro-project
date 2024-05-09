@@ -11,14 +11,14 @@ close all;
 % 1. Defining variables
 %----------------------------------------------------------------
 
-var rr c n u w y k i lb mc pi r q x v_H v_P e mu g tau gy_obs gc_obs gi_obs pi_obs r_obs u_obs varrho;
+var rr c n u w y k i lb mc pi r q x v_H v_P e mu g tau gy_obs gc_obs gi_obs pi_obs r_obs u_obs pe_obs varrho;
 var e_a e_g e_c e_m e_i e_r e_t;
 
 
 varexo eta_a eta_g eta_c eta_m eta_i eta_r eta_t;
  
-parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma epsilon kappa rho phi_y phi_pi xi
-			tau0 y0 sig theta1 theta2 varphi A xi piss  rho_a rho_g rho_c rho_m rho_i rho_r rho_t;
+parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma epsilon kappa rho phi_y phi_pi
+			tau0 y0 sig theta1 theta2 varphi A xi piss rho_a rho_g rho_c rho_m rho_i rho_r rho_t;
             
             
 %----------------------------------------------------------------
@@ -131,6 +131,8 @@ model;
 	r_obs  = r  - steady_state(r);
 	[name='measurement unemployment']
 	u_obs  = u  - steady_state(u);
+    [name='measurement carbon tax']
+    pe_obs = tau - steady_state(tau);
 	
 	[name='shocks']
 	log(e_a) = rho_a*log(e_a(-1))+eta_a;
@@ -181,7 +183,7 @@ steady_state_model;
 	e_i 	= 1;
 	e_r 	= 1;
 	e_t 	= 1;
-	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; 
+	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; pe_obs = 0; 
 end;
 
 
@@ -193,50 +195,60 @@ shocks;
 	var eta_m;	stderr 0.01;
 	var eta_i;	stderr 0.01;
 	var eta_r;	stderr 0.01;
+    var eta_t;  stderr 0.01;
 end;
+	
+resid;
+check;
 
+stoch_simul(irf=30,order=1) y c i pi r u x tau;
 
-%% J'essaie de recopier le tp3
+varobs gy_obs pi_obs r_obs gc_obs gi_obs u_obs pe_obs;
 
 estimated_params;
 //	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
 	stderr eta_g,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_g,				.92,    	,		,		beta_pdf,			.5,				0.2;
-	stderr eta_p,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_p,				.92,    	,		,		beta_pdf,			.5,				0.2;
+	%stderr eta_p,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	%rho_p,				.92,    	,		,		beta_pdf,			.5,				0.2;
 	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_c,				.96,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
-	
+	stderr eta_t,       ,           ,       ,       INV_GAMMA_PDF,      .01,            2;
+    rho_t,              .9,         ,       ,       beta_pdf,           .5,             0.2;
 
 	sigmaC,				2,    		,		,		normal_pdf,			1.5,				.35;
-	sigmaH,				0.8,   	 	,		,		gamma_pdf,			2,				0.5;
-	hh,					.34,    		,		,		beta_pdf,			.75,			0.1;
+	sigmaL,				0.8,   	 	,		,		gamma_pdf,			2,				0.5;
+%    delta_N
+ %   phi
+  %  eta
+   % gamma
+	%hh,					.34,    		,		,		beta_pdf,			.75,			0.1;
 	kappa,				6,    		,		,		gamma_pdf,			4,				1.5;
 	xi,					106,    	0,		,		gamma_pdf,			100,				15;
 	rho,				.45,    	,		,		beta_pdf,			.75,				0.1;
 	phi_pi,				1.8,    	,		,		gamma_pdf,			1.5,				0.25;
 	phi_y,				0.05,    	,		,		gamma_pdf,			0.12,				0.05;
-	phi_dy,				0.02,    	,		,		normal_pdf,			0.12,				0.05;
+	%phi_dy,				0.02,    	,		,		normal_pdf,			0.12,				0.05;
 %	alpha,				0.25,    	,		,		beta_pdf,			0.3,				.05;
 
 end;
 
 
 %%% estimation of the model
-estimation(datafile=myobs,^$	% your datafile, must be in your current folder
+estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=5000,				% number of sample in Metropolis-Hastings
-mh_jscale=0.5,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.1,				% adjust this to have an acceptance rate between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
 forecast=8					% forecasts horizon
-) gy_obs pi_obs r_obs gc_obs gi_obs;
+) gy_obs pi_obs r_obs gc_obs gi_obs u_obs pe_obs;
 
 
 % load estimated parameters
@@ -255,12 +267,41 @@ stoch_simul(irf=30,conditional_variance_decomposition=[1,4,10,100],order=1) gy_o
 
 
 
+%shock_decomposition lny pi_obs r_obs;
+
+load(options_.datafile);
+if exist('T') ==1
+	Tvec = T;
+else
+	Tvec = 1:size(dataset_,1);
+end
+Tfreq = mean(diff(Tvec));
+
+%%%%%%%%%%%%%%%%% END OF SAMPLE FORECASTING - PLOTS
+tprior = 20; % period before forecasts to plot
+Tvec2 = Tvec(end) + (0:(options_.forecast))*Tfreq;
+for i1 = 1 :size(dataset_.name,1)
+	idv		= strmatch(dataset_.name{i1},M_.endo_names,'exact');
+	idd		= strmatch(dataset_.name{i1},dataset_.name,'exact');
+	if ~isempty(idd) && isfield(oo_.MeanForecast.Mean, dataset_.name{i1})
+		% Draw 
+		yobs   = eval(['oo_.SmoothedVariables.' dataset_.name{i1}])+dataset_info.descriptive.mean(idd);
+		yfc    = eval(['oo_.MeanForecast.Mean.'  dataset_.name{i1}])+dataset_info.descriptive.mean(idd);
+		yfcVar = sqrt(eval(['oo_.MeanForecast.Var.' dataset_.name{i1}]));
+		figure;
+		plot(Tvec(end-tprior+1:end),yobs(end-tprior+1:end))
+		hold on;
+			plot(Tvec2,[yobs(end) yfc'] ,'r--','LineWidth',1.5);
+			plot(Tvec2,[yobs(end) (yfc+1.96*yfcVar)'],'r:','LineWidth',1.5)
+			plot(Tvec2,[yobs(end) (yfc-1.96*yfcVar)'],'r:','LineWidth',1.5)
+			grid on;
+			xlim([Tvec(end-tprior+1) Tvec2(end)])
+			legend('Sample','Forecasting','Uncertainty')
+			title(['forecasting of ' M_.endo_names_tex{idv}])
+		hold off;
+	else
+		warning([ dataset_.name{i1} ' is not an observable or you have not computed its forecast'])
+	end
+end
 
 
-
-
-% Je mets ça en commentaire pour l'instant	
-%resid(1);
-%check;
-
-%stoch_simul(irf=30,order=1) y c i pi r u x ;
