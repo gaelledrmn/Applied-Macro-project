@@ -44,7 +44,7 @@ varphi	= 0.2;		% elasticity of emission to GDP
 piss	= 1.0086;	% steady state inflation
 
 % value of main variables:
-tau0 	= 50/1000 ;	% value of carbon tax ($/ton)
+tau0 	= 50/1000 ;	% value of carbon tax
 sig		= 0.25; 	% Carbon intensity 0.25 Gt / Trillions USD
 y0	 	= 2.6;		% trillions usd PPA 
 theta1  = 0.05;		% level of abatement costs
