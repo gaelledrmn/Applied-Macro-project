@@ -24,27 +24,27 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 %----------------------------------------------------------------
 % 2. Calibration
 %----------------------------------------------------------------
-delta_N = .1;		% separation rate
+delta_N = .17;		% separation rate
 eta		= .5;		% negotiation share
 phi		= 0.05;		% shape hiring cost function
-beta 	= 0.99; 	% Discount factor firms
+beta 	= 0.996; 	% Discount factor firms
 delta 	= 0.025;	% Depreciation rate
 alpha 	= 0.35;		% Capital share
 gy 		= 0.55;   	% Public spending in GDP
 sigmaC 	= 1;		% Consumption risk aversion
-sigmaL 	= 2; 		% Elasticity of labor
-epsilon = 10;		% Elasticity between goods
-rho 	= .8;		% Monetary policy smoothing
-phi_y	= 0.1;		% Monetary policy reaction to output
+sigmaL 	= 1; 		% Elasticity of labor
+epsilon = 7;		% Elasticity between goods
+rho 	= 0.8;		% Monetary policy smoothing
+phi_y	= 0.025;		% Monetary policy reaction to output
 phi_pi	= 1.5;		% Monetary policy reaction to inflation
 xi 		= 80;		% Adjustment costs on prices
 kappa	= 4;		% adjustment costs on investment
 gamma	= .85;		% unemployment insurance as % of real wage
-varphi	= 0.15;		% elasticity of emission to GDP
-piss	= 1.005;	% steady state inflation
+varphi	= 0.2;		% elasticity of emission to GDP
+piss	= 1.0086;	% steady state inflation
 
 % value of main variables:
-tau0 	= 50 /1000;	% value of carbon tax ($/ton)
+tau0 	= 50/1000 ;	% value of carbon tax ($/ton)
 sig		= 0.25; 	% Carbon intensity 0.25 Gt / Trillions USD
 y0	 	= 2.6;		% trillions usd PPA 
 theta1  = 0.05;		% level of abatement costs
@@ -58,7 +58,7 @@ rho_c	= 0.95;
 rho_m  	= 0.95;
 rho_i	= 0.95;
 rho_r	= 0.40;
-rho_t	= 0.8;
+rho_t	= 0.40;
 
 %----------------------------------------------------------------
 % 3. Model
@@ -184,56 +184,37 @@ steady_state_model;
 	e_t 	= 1;
 	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; pe_obs = 0; 
 end;
-
-
-%%% SIMULATIONS
-%shocks;
-%	var eta_a;	stderr 0.01;
-%	var eta_g;	stderr 0.01;
-%	var eta_c;	stderr 0.01;
-%	var eta_m;	stderr 0.01;
-%	var eta_i;	stderr 0.01;
-%	var eta_r;	stderr 0.01;
-%    var eta_t;  stderr 0.01;
-%end;
 	
-%resid;
-%check;
+resid;
+check;
 
-%stoch_simul(irf=30,order=1) y c i pi r u x tau;
 
-varobs gy_obs pi_obs r_obs gc_obs gi_obs u_obs pe_obs;
+varobs gy_obs pi_obs gc_obs u_obs pe_obs ;
 
 estimated_params;
 //	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
 	stderr eta_g,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_g,				.92,    	,		,		beta_pdf,			.5,				0.2;
-	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_c,				.96,    	,		,		beta_pdf,			.5,				0.2;
-	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_t,       ,           ,       ,       INV_GAMMA_PDF,      .01,            2;
-    rho_t,              .9,         ,       ,       beta_pdf,           .5,             0.2;
+    rho_t,              .96,        ,       ,       beta_pdf,           .5,             0.2;
     stderr eta_a,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_a,				.9,    	,		,		beta_pdf,			.5,				0.2;
+	rho_a,				.9,     	,		,		beta_pdf,			.5,				0.2;
 	stderr eta_m,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_m,				.9,    		,		,		beta_pdf,			.5,				0.2;
 	
 	sigmaC,				2,    		,		,		normal_pdf,			1.5,			.35;
 	sigmaL,				0.8,   	 	,		,		gamma_pdf,			2,				0.5;
     delta_N,            ,           ,       ,       beta_pdf,           0.3,            0.01;
-    %phi,                0.5,           ,       ,       normal_pdf,          1,              0.1;
-    eta,                0.6,           ,       ,       beta_pdf,           0.5,            0.1;
-    gamma,              0.8,           ,       ,       beta_pdf,           0.6,            0.15;
+    eta,                0.6,        ,       ,       beta_pdf,           0.5,            0.1;
+    gamma,              0.8,        ,       ,       beta_pdf,           0.6,            0.15;
 	kappa,				6,    		,		,		gamma_pdf,			4,				1.5;
 	xi,					106,    	0,		,		gamma_pdf,			100,			15;
 	rho,				.45,    	,		,		beta_pdf,			.75,			0.1;
 	phi_pi,				1.8,    	,		,		gamma_pdf,			1.5,			0.25;
 	phi_y,				0.05,    	,		,		gamma_pdf,			0.1,			0.05;
-	%alpha,				0.25,    	,		,		beta_pdf,			0.3,			.05;
-
+	
 end;
 
 
@@ -242,12 +223,12 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=5000,				% number of sample in Metropolis-Hastings
-mh_jscale=0.5,				% adjust this to have an acceptance rate between 0.2 and 0.3
+mh_jscale=0.5,				% acceptance rate is between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
 forecast=8					% forecasts horizon
-) gy_obs pi_obs r_obs gc_obs gi_obs pe_obs u_obs;
+) gy_obs pi_obs gc_obs u_obs pe_obs; 
 
 
 % load estimated parameters

@@ -1,0 +1,44 @@
+function [residual, T_order, T] = dynamic_resid(y, x, params, steady_state, T_order, T)
+if nargin < 6
+    T_order = -1;
+    T = NaN(29, 1);
+end
+[T_order, T] = estim_NK.sparse.dynamic_resid_tt(y, x, params, steady_state, T_order, T);
+residual = NaN(36, 1);
+    residual(1) = (y(47)) - (y(68)*T(1));
+    residual(2) = (T(2)*y(37)) - (1);
+    residual(3) = (y(47)*y(40)) - (params(6)*y(39)^params(5));
+    residual(4) = (y(69)*y(48)) - (1+y(69)*y(48)*T(3)*T(4)+T(7)*T(8));
+    residual(5) = (y(41)) - (T(10)*T(11));
+    residual(6) = (y(69)*y(43)*T(13)) - (y(42)-y(6)*(1-params(2)));
+    residual(7) = (y(84)*(1-params(2))+params(3)*y(85)*y(77)/y(42)) - (y(37)*y(48));
+    residual(8) = (y(40)) - (y(41)*(1-params(3))*y(49)/y(39));
+residual(9) = 1-params(10)*y(72)+y(72)*params(10)*y(44)-params(16)*y(45)*(y(45)-(steady_state(9)))+T(15)*(y(81)-(steady_state(9)));
+    residual(10) = (y(49)) - (y(44)-T(16)-y(50)*(1-params(29))*params(26)*(1-y(51))*T(17));
+    residual(11) = ((y(50)*params(26)*T(18)/(params(27)*params(28)))^(1/(params(28)-1))) - (y(51));
+    residual(12) = (y(41)) - (y(38)+y(43)+y(53)+y(41)*T(16)+y(41)*params(16)/2*T(19));
+    residual(13) = (y(52)) - (T(18)*params(26)*(1-y(51)));
+    residual(14) = (y(37)) - (y(46)/y(81));
+    residual(15) = (y(46)) - (T(27)*T(29)*y(70));
+    residual(16) = (y(53)) - ((steady_state(5))*params(7)*y(67));
+    residual(17) = (y(50)) - (params(30)*y(71));
+    residual(18) = (y(54)) - (log(T(28)));
+    residual(19) = (y(55)) - (log(y(38)/y(2)));
+    residual(20) = (y(56)) - (log(T(12)));
+    residual(21) = (y(57)) - (y(45)-(steady_state(9)));
+    residual(22) = (y(58)) - (y(46)-(steady_state(10)));
+    residual(23) = (y(60)) - (log(y(39)/(steady_state(3))));
+    residual(24) = (y(59)) - (y(50)-(steady_state(14)));
+    residual(25) = (y(61)) - (log(T(23)));
+    residual(26) = (y(62)) - (log(y(38)/(steady_state(2))));
+    residual(27) = (y(63)) - (log(y(43)/(steady_state(7))));
+    residual(28) = (y(64)) - (log(T(21)));
+    residual(29) = (y(65)) - (log(y(46)/(steady_state(10))));
+    residual(30) = (log(y(66))) - (params(19)*log(y(30))+x(1));
+    residual(31) = (log(y(67))) - (params(20)*log(y(31))+x(2));
+    residual(32) = (log(y(68))) - (params(21)*log(y(32))+x(3));
+    residual(33) = (log(y(72))) - (params(25)*log(y(36))+params(11)/params(10)*x(7));
+    residual(34) = (log(y(69))) - (params(22)*log(y(33))+x(4));
+    residual(35) = (log(y(70))) - (params(23)*log(y(34))+x(5));
+    residual(36) = (log(y(71))) - (params(24)*log(y(35))+x(6));
+end
