@@ -144,6 +144,7 @@ model;
 	lnpi = log(pi/steady_state(pi));
 	[name='Investment gap']
 	lnr = log(r/steady_state(r));
+   
 	
 	[name='shocks']
 	log(e_a) = rho_a*log(e_a(-1))+eta_a;
@@ -195,7 +196,7 @@ steady_state_model;
 	e_r 	= 1;
 	e_t 	= 1;
 	gy_obs = 0; gc_obs = 0; gi_obs = 0; pi_obs = 0; r_obs = 0; u_obs = 0; pe_obs = 0; 
-    lny = 0; lnc = 0; lni = 0; lnpi = 0; lnr = 0;
+    lny = 0; lnc = 0; lni = 0; lnpi = 0; lnr = 0; 
 end;
 	
 resid;
@@ -211,7 +212,7 @@ estimated_params;
 	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_c,				.96,    	,		,		beta_pdf,			.5,				0.2;
 	stderr eta_t,       ,           ,       ,       INV_GAMMA_PDF,      .01,            2;
-    rho_t,              .5,        ,       ,       beta_pdf,           .5,             0.2;
+    rho_t,              .5,         ,       ,       beta_pdf,           .5,             0.2;
     %stderr eta_a,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	%rho_a,				.9,     	,		,		beta_pdf,			.5,				0.2;
 	%stderr eta_m,   	,			,		,		INV_GAMMA_PDF,		.01,			0.2;
@@ -240,7 +241,7 @@ estimation(datafile=myobs,	% your datafile, must be in your current folder
 first_obs=1,				% First data of the sample
 mode_compute=4,				% optimization algo, keep it to 4
 mh_replic=5000,				% number of sample in Metropolis-Hastings
-mh_jscale=0.4,				% acceptance rate is between 0.2 and 0.3
+mh_jscale=0.5,				% acceptance rate is between 0.2 and 0.3
 prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
@@ -264,7 +265,7 @@ stoch_simul(irf=30,conditional_variance_decomposition=[1,4,10,100],order=1) gy_o
 
 
 
-shock_decomposition lny pi_obs u_obs;
+shock_decomposition lny pi_obs u_obs ;
 
 load(options_.datafile);
 if exist('T') ==1
@@ -302,34 +303,6 @@ for i1 = 1 :size(dataset_.name,1)
 end
 
 
-
-%%%%%%%%%%%%%%%%% COUNTERFACTUAL EXERCISES %%%%%%%%%%%%%%%%%%
-%% stacks shocks in matrix
-fx = fieldnames(oo_.SmoothedShocks);
-for ix=1:size(fx,1)
-	shock_mat = eval(['oo_.SmoothedShocks.' fx{ix}]);
-	if ix==1; ee_mat = zeros(length(shock_mat),M_.exo_nbr); end;
-	ee_mat(:,strmatch(fx{ix},M_.exo_names,'exact')) = shock_mat;
-end
-
-%%% Simulate baseline scenario
-% solve decision rule
-[oo_.dr, info, M_.params] = resol(0, M_, options_, oo_.dr, oo_.dr.ys, oo_.exo_steady_state, oo_.exo_det_steady_state);
-% simulate the model
-y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat,options_.order);
-
-%%% Simulate alternative scenario
-% make a copy
-Mx  = M_;
-oox = oo_;
-% change parameter
-Mx.params(strcmp('phi_y',M_.param_names)) = .25;
-% solve new decision rule
-[oox.dr, info, Mx.params] = resol(0, Mx, options_, oox.dr, oox.dr.ys, oox.exo_steady_state, oox.exo_det_steady_state);
-% simulate dovish central bank
-ydov            = simult_(Mx,options_,oox.dr.ys,oox.dr,ee_mat,options_.order);
-
-
 %%%%%%%%%%%%%%%%% FORECAST UNDER ALTERNATIVE POLICY %%%%%%%%%%%%%%%%%%
 Thorizon 	= 12; % number of quarters for simulation
 % Built baseline forecast
@@ -340,7 +313,7 @@ for ix=1:size(fx,1)
 	ee_mat2(:,strmatch(fx{ix},M_.exo_names,'exact')) = shock_mat;
 end
 % add mean-wise forecast with zero mean shocks
-ee_mat2 	= [ee_mat;zeros(Thorizon,M_.exo_nbr)];
+ee_mat2 	= [ee_mat2;zeros(Thorizon,M_.exo_nbr)];
 Tvec2 		= Tvec(1):Tfreq:(Tvec(1)+size(ee_mat2,1)*Tfreq);
 
 %%% Simulate baseline scenario
@@ -354,13 +327,13 @@ y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat2,options_.order);
 ee_matx = ee_mat2;
 % select fiscal shock
 idx = strmatch('eta_t',M_.exo_names,'exact');
-ee_matx(end-Thorizon+1,idx) = 0.5;% add a 50 percent increase in carbon price 
+ee_matx(end-Thorizon+1,idx) = 0.7;% add a 70 percent increase in carbon price 
 % simulate the model
 y_carbon           = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
 
 
 % draw result
-var_names={'lny','lni','lnpi','u_obs','g','tau'};
+var_names={'lny','lnc','lnpi','u_obs','tau'};
 Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Tvec2,[2023 Tvec2(end)],y_,y_carbon)
 legend('Estimated','Carbon')
