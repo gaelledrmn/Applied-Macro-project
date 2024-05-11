@@ -1932,5 +1932,5 @@ Order           1        2        3        4        5
 gy_obs     0.0640   0.0135  -0.0309  -0.0515  -0.0595
 pi_obs     0.5039   0.3060   0.2046   0.1408   0.0961
 u_obs      0.8903   0.7694   0.6465   0.5303   0.4252
-Total computing time : 0h01m12s
+Total computing time : 0h01m04s
 Note: warning(s) encountered in MATLAB/Octave code

@@ -303,6 +303,33 @@ end
 
 
 
+%%%%%%%%%%%%%%%%% COUNTERFACTUAL EXERCISES %%%%%%%%%%%%%%%%%%
+%% stacks shocks in matrix
+fx = fieldnames(oo_.SmoothedShocks);
+for ix=1:size(fx,1)
+	shock_mat = eval(['oo_.SmoothedShocks.' fx{ix}]);
+	if ix==1; ee_mat = zeros(length(shock_mat),M_.exo_nbr); end;
+	ee_mat(:,strmatch(fx{ix},M_.exo_names,'exact')) = shock_mat;
+end
+
+%%% Simulate baseline scenario
+% solve decision rule
+[oo_.dr, info, M_.params] = resol(0, M_, options_, oo_.dr, oo_.dr.ys, oo_.exo_steady_state, oo_.exo_det_steady_state);
+% simulate the model
+y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat,options_.order);
+
+%%% Simulate alternative scenario
+% make a copy
+Mx  = M_;
+oox = oo_;
+% change parameter
+Mx.params(strcmp('phi_y',M_.param_names)) = .25;
+% solve new decision rule
+[oox.dr, info, Mx.params] = resol(0, Mx, options_, oox.dr, oox.dr.ys, oox.exo_steady_state, oox.exo_det_steady_state);
+% simulate dovish central bank
+ydov            = simult_(Mx,options_,oox.dr.ys,oox.dr,ee_mat,options_.order);
+
+
 %%%%%%%%%%%%%%%%% FORECAST UNDER ALTERNATIVE POLICY %%%%%%%%%%%%%%%%%%
 Thorizon 	= 12; % number of quarters for simulation
 % Built baseline forecast
@@ -333,7 +360,7 @@ y_carbon           = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order
 
 
 % draw result
-var_names={'lny','lni','lnpi','u','g','tau'};
+var_names={'lny','lni','lnpi','u_obs','g','tau'};
 Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Tvec2,[2023 Tvec2(end)],y_,y_carbon)
 legend('Estimated','Carbon')
