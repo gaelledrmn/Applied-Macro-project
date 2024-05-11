@@ -25,7 +25,7 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 %----------------------------------------------------------------
 % 2. Calibration
 %----------------------------------------------------------------
-delta_N = .17;		% separation rate
+delta_N = .017;		% separation rate
 eta		= .5;		% negotiation share
 phi		= 0.05;		% shape hiring cost function
 beta 	= 0.99; 	% Discount factor firms
@@ -224,7 +224,7 @@ estimated_params;
 
 	sigmaC,				2,    		,		,		normal_pdf,			1.5,			.35;
 	sigmaL,				0.8,   	 	,		,		gamma_pdf,			2,				0.5;
-    delta_N,            ,           ,       ,       beta_pdf,           0.3,            0.01;
+    delta_N,            ,           ,       ,       beta_pdf,           0.1,            0.01;
     eta,                0.6,        ,       ,       beta_pdf,           0.5,            0.1;
     gamma,              0.8,        ,       ,       beta_pdf,           0.6,            0.15;
 	kappa,				6,    		,		,		gamma_pdf,			4,				1.5;
