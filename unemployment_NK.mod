@@ -202,7 +202,7 @@ resid;
 check;
 
 
-varobs gy_obs pi_obs gc_obs u_obs pe_obs ;
+varobs gy_obs gc_obs pe_obs r_obs gi_obs ; %u_obs pi_obs
 
 estimated_params;
 //	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
@@ -211,12 +211,16 @@ estimated_params;
 	stderr eta_c,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_c,				.96,    	,		,		beta_pdf,			.5,				0.2;
 	stderr eta_t,       ,           ,       ,       INV_GAMMA_PDF,      .01,            2;
-    rho_t,              .96,        ,       ,       beta_pdf,           .5,             0.2;
-    stderr eta_a,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_a,				.9,     	,		,		beta_pdf,			.5,				0.2;
-	stderr eta_m,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	rho_m,				.9,    		,		,		beta_pdf,			.5,				0.2;
-	
+    rho_t,              .5,        ,       ,       beta_pdf,           .5,             0.2;
+    %stderr eta_a,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	%rho_a,				.9,     	,		,		beta_pdf,			.5,				0.2;
+	%stderr eta_m,   	,			,		,		INV_GAMMA_PDF,		.01,			0.2;
+	%rho_m,				.9,    		,		,		beta_pdf,			.5,				0.2;
+	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
+	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
+
 	sigmaC,				2,    		,		,		normal_pdf,			1.5,			.35;
 	sigmaL,				0.8,   	 	,		,		gamma_pdf,			2,				0.5;
     delta_N,            ,           ,       ,       beta_pdf,           0.3,            0.01;
@@ -241,7 +245,7 @@ prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
 forecast=8					% forecasts horizon
-) gy_obs pi_obs gc_obs u_obs pe_obs; 
+) gy_obs gc_obs r_obs gi_obs pe_obs; %u_obs pi_obs
 
 
 % load estimated parameters
@@ -299,47 +303,8 @@ end
 
 
 
-%%%%%%%%%%%%%%%%% COUNTERFACTUAL EXERCISES %%%%%%%%%%%%%%%%%%
-%% stacks shocks in matrix
-fx = fieldnames(oo_.SmoothedShocks);
-for ix=1:size(fx,1)
-	shock_mat = eval(['oo_.SmoothedShocks.' fx{ix}]);
-	if ix==1; ee_mat = zeros(length(shock_mat),M_.exo_nbr); end;
-	ee_mat(:,strmatch(fx{ix},M_.exo_names,'exact')) = shock_mat;
-end
-
-%%% Simulate baseline scenario
-% solve decision rule
-[oo_.dr, info, M_.params] = resol(0, M_, options_, oo_.dr, oo_.dr.ys, oo_.exo_steady_state, oo_.exo_det_steady_state);
-% simulate the model
-y_            = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_mat,options_.order);
-
-%%% Simulate alternative scenario
-% make a copy
-Mx  = M_;
-oox = oo_;
-% change parameter
-Mx.params(strcmp('phi_y',M_.param_names)) = .25;
-% solve new decision rule
-[oox.dr, info, Mx.params] = resol(0, Mx, options_, oox.dr, oox.dr.ys, oox.exo_steady_state, oox.exo_det_steady_state);
-% simulate dovish central bank
-ydov            = simult_(Mx,options_,oox.dr.ys,oox.dr,ee_mat,options_.order);
-
-% draw result
-var_names={'lny','lnc','lni','lnpi','lnr','h_obs'};
-Ty = [T(1)-Tfreq;T];
-draw_tables(var_names,M_,Ty,[],y_,ydov)
-legend('Estimated','Dovish')
-
-
-
-
-
-
-
-
 %%%%%%%%%%%%%%%%% FORECAST UNDER ALTERNATIVE POLICY %%%%%%%%%%%%%%%%%%
-Thorizon 	= 8; % number of quarters for simulation
+Thorizon 	= 12; % number of quarters for simulation
 % Built baseline forecast
 fx = fieldnames(oo_.SmoothedShocks);
 for ix=1:size(fx,1)

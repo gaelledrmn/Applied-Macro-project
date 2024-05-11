@@ -19,9 +19,9 @@ for ix = 1:n
     title(M_.endo_names_tex{idy})
     grid on;
     hold off;
-    if ~isempty(xlimval)
-        xlim(xlimval)
-    end
+    %if ~isempty(xlimval)
+    %    xlim(xlimval)
+    %end
 end
 end
 
