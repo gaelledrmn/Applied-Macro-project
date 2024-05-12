@@ -1,7 +1,7 @@
 # The impact of EU ETS market on employment in France
 _Clémence BRIODEAU, Lucie CARLIER and Gaëlle DORMION_
 
--Applied macroeconomic modelling: Policies, the business cycle, and the green transition_
+_Applied macroeconomic modelling: Policies, the business cycle, and the green transition_
 
 ## Code description:
 
