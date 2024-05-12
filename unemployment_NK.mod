@@ -25,7 +25,7 @@ parameters beta delta alpha sigmaC sigmaL delta_N chi phi gy b  Gam eta gamma ep
 %----------------------------------------------------------------
 % 2. Calibration
 %----------------------------------------------------------------
-delta_N = .017;		% separation rate
+delta_N = .1;		% separation rate
 eta		= .5;		% negotiation share
 phi		= 0.05;		% shape hiring cost function
 beta 	= 0.99; 	% Discount factor firms
@@ -200,6 +200,8 @@ steady_state_model;
 end;
 	
 resid;
+model_diagnostics;
+
 check;
 
 

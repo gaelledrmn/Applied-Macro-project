@@ -967,7 +967,7 @@ M_.static_g1_sparse_rowval = int32([2 7 17 1 15 30 4 5 9 16 4 15 16 3 9 5 7 9 13
 M_.static_g1_sparse_colval = int32([1 1 1 2 2 2 3 3 3 3 4 4 4 5 5 6 6 6 6 6 6 6 6 6 6 7 7 7 8 8 8 9 9 10 10 11 11 11 11 12 12 12 13 13 14 14 14 15 15 16 16 16 17 18 18 18 19 19 20 20 20 21 22 23 24 25 26 27 28 28 28 29 30 31 32 33 34 34 35 35 36 36 37 37 38 38 38 39 39 40 40 ]);
 M_.static_g1_sparse_colptr = int32([1 4 7 11 14 16 26 29 32 34 36 40 43 45 48 50 53 54 57 59 62 63 64 65 66 67 68 69 72 73 74 75 76 77 79 81 83 85 88 90 92 ]);
 close all;
-M_.params(6) = .017;
+M_.params(6) = .1;
 delta_N = M_.params(6);
 M_.params(12) = .5;
 eta = M_.params(12);
@@ -1030,6 +1030,7 @@ M_.params(34) = 0.40;
 rho_t = M_.params(34);
 options_resid_ = struct();
 display_static_residuals(M_, options_, oo_, options_resid_);
+model_diagnostics(M_,options_,oo_);
 oo_.dr.eigval = check(M_,options_,oo_);
 if isempty(estim_params_)
     estim_params_.var_exo = zeros(0, 10);

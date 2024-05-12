@@ -1,3 +1,12 @@
+%% Main file to replicate all the report's results %%
+% It uses the call_dbnomics function to load the data and data are saved in
+% the my_obs.mat file.
+% It calls unemployment_NK.mod to estimate the model and replicate the
+% results of the report. The .mod file requires the draw_tables function to
+% plot some specific results. 
+
+
+
 %% Load data
 
 % Dbnomics: Output, Consumption, Investment, Deflator, Unemployment, Nominal Rate
@@ -80,7 +89,7 @@ gc_obs  = diff(log(dbnomics(:,3)./(def)));
 gi_obs  = diff(log(dbnomics(:,4)./(def)));
 
 % unemployment rate
-u_obs = diff(log(dbnomics(:,6)))
+u_obs	= dbnomics(2:end,6);
 
 % inflation rate
 pi_obs  = diff(log(def));
@@ -160,3 +169,7 @@ h_gi_adf = adftest(gi_obs);
 
 %% Save into myobs.mat
 save myobs gy_obs gc_obs gi_obs u_obs pe_obs T pi_obs r_obs;
+
+
+%% Estimation of the model
+dynare unemployment_NK.mod

@@ -64,34 +64,49 @@ Equation number 39: 39                              :       0.000000
 Equation number 40: 40                              :       0.000000
 
 
+[Warning: Some of the parameters have no value (chi, b, Gam, A) when using model_diagnostics. If these
+parameters are not initialized in a steadystate file or a steady_state_model-block, Dynare may not be
+able to solve the model. Note that simul, perfect_foresight_setup, and perfect_foresight_solver do not
+automatically call the steady state file.] 
+MODEL_DIAGNOSTICS:  The Jacobian of the static model is singular
+MODEL_DIAGNOSTICS:  there is 1 collinear relationships between the variables and the equations
+Collinear variables:
+pi
+r
+Collinear equations
+    19    39
+
+MODEL_DIAGNOSTICS:  The presence of a singularity problem typically indicates that there is one
+MODEL_DIAGNOSTICS:  redundant equation entered in the model block, while another non-redundant equation
+MODEL_DIAGNOSTICS:  is missing. The problem often derives from Walras Law.
 
 EIGENVALUES:
          Modulus             Real        Imaginary
                0                0                0
-       6.068e-17       -6.068e-17                0
+       4.914e-16       -4.914e-16                0
+          0.1735          -0.1735                0
              0.4              0.4                0
              0.4              0.4                0
-          0.7741           0.7684          0.09411
-          0.7741           0.7684         -0.09411
+          0.7641           0.7575           0.1004
+          0.7641           0.7575          -0.1004
             0.95             0.95                0
             0.95             0.95                0
             0.95             0.95                0
             0.95             0.95                0
             0.95             0.95                0
-          0.9918           0.9918                0
-           1.087            1.086          0.04712
-           1.087            1.086         -0.04712
-           1.146            1.141           0.1081
-           1.146            1.141          -0.1081
-           3.198           -3.198                0
-       1.748e+16       -1.748e+16                0
-        3.51e+16         3.51e+16                0
-       2.392e+33        2.392e+33                0
-             Inf              Inf                0
+          0.9909           0.9909                0
+            1.09             1.09          0.03294
+            1.09             1.09         -0.03294
+             1.1            1.089           0.1551
+             1.1            1.089          -0.1551
+       1.364e+16        1.364e+16                0
+       4.866e+16       -4.866e+16                0
+       1.614e+17       -1.614e+17                0
+       1.832e+17        1.832e+17                0
              Inf             -Inf                0
 
-There are 10 eigenvalue(s) larger than 1 in modulus for 9 forward-looking variable(s)
-The rank condition ISN'T verified!
+There are 9 eigenvalue(s) larger than 1 in modulus for 9 forward-looking variable(s)
+The rank condition is verified.
 
 [Warning: Some of the parameters have no value (chi, b, Gam, A) when using initial_estimation_checks. If
 these parameters are not initialized in a steadystate file or a steady_state_model-block, Dynare may
@@ -2442,5 +2457,5 @@ Order           1        2        3        4        5
 gy_obs    -0.0387   0.0437  -0.0244  -0.0414  -0.0516
 pi_obs     0.4827   0.2938   0.1976   0.1362   0.0924
 u_obs      0.8755   0.7621   0.6385   0.5212   0.4143
-Total computing time : 0h01m05s
+Total computing time : 0h01m15s
 Note: warning(s) encountered in MATLAB/Octave code
