@@ -16,7 +16,7 @@ ETS_quarters = datetime(year(ETSprice_month{:,1}), (quarter(ETSprice_month{:,1})
 % Compute the quaterly mean of ETS price (raw data are monthly)
 mean_pe_obs = splitapply(@mean, ETSprice_month{:, 2}, findgroups(ETS_quarters));
 
-% Create a database with quarter, year and quaterly average
+% Create a database with quarter, year and quaterly averageavec le trimestre et l'année et la moyenne trimestrielle
 ETSprice_quart = table(unique(ETS_quarters), mean_pe_obs, 'VariableNames', {'date', 'pe_obs'});
 
 

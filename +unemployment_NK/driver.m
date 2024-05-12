@@ -1139,7 +1139,7 @@ for ix = 1:size(fx,1)
 idx = strmatch(fx{ix},M_.exo_names,'exact');
 M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
 end
-options_.conditional_variance_decomposition = [1;4;10;100;];
+options_.conditional_variance_decomposition = [1;4;10;20;];
 options_.irf = 30;
 options_.order = 1;
 var_list_ = {'gy_obs';'pi_obs';'u_obs'};

@@ -261,7 +261,7 @@ for ix = 1:size(fx,1)
 	M_.Sigma_e(idx,idx) = eval(['oo_.posterior_mean.shocks_std.' fx{ix}])^2;
 end
 
-stoch_simul(irf=30,conditional_variance_decomposition=[1,4,10,100],order=1) gy_obs pi_obs u_obs;
+stoch_simul(irf=30,conditional_variance_decomposition=[1,4,10,20],order=1) gy_obs pi_obs u_obs;
 
 
 
