@@ -1026,11 +1026,10 @@ M_.params(32) = 0.95;
 rho_i = M_.params(32);
 M_.params(33) = 0.40;
 rho_r = M_.params(33);
-M_.params(34) = 0.40;
+M_.params(34) = 0.80;
 rho_t = M_.params(34);
 options_resid_ = struct();
 display_static_residuals(M_, options_, oo_, options_resid_);
-model_diagnostics(M_,options_,oo_);
 oo_.dr.eigval = check(M_,options_,oo_);
 if isempty(estim_params_)
     estim_params_.var_exo = zeros(0, 10);
@@ -1178,7 +1177,7 @@ else
 warning([ dataset_.name{i1} ' is not an observable or you have not computed its forecast'])
 end
 end
-Thorizon 	= 12; 
+Thorizon 	= 8; 
 fx = fieldnames(oo_.SmoothedShocks);
 for ix=1:size(fx,1)
 shock_mat = eval(['oo_.SmoothedShocks.' fx{ix}]);
@@ -1193,8 +1192,7 @@ ee_matx = ee_mat2;
 idx = strmatch('eta_t',M_.exo_names,'exact');
 ee_matx(end-Thorizon+1,idx) = 0.7;
 y_carbon           = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order);
-var_names={'lny','lnc','lnpi','u_obs','tau'};
-Ty = [T(1)-Tfreq;T];
+var_names={'lny','lnpi','u_obs','tau', 'lnc'};
 draw_tables(var_names,M_,Tvec2,[2023 Tvec2(end)],y_,y_carbon)
 legend('Estimated','Carbon')
 

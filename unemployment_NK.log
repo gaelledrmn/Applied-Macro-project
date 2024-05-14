@@ -18,7 +18,7 @@ Finding the optimal block decomposition of the dynamic model...
   the largest simultaneous block has 19 equation(s) 
                                  and 18 feedback variable(s). 
 Preprocessing completed. 
-Preprocessing time: 0h00m00s.
+Preprocessing time: 0h00m01s.
 
 
 Residuals of the static equations:
@@ -64,21 +64,6 @@ Equation number 39: 39                              :       0.000000
 Equation number 40: 40                              :       0.000000
 
 
-[Warning: Some of the parameters have no value (chi, b, Gam, A) when using model_diagnostics. If these
-parameters are not initialized in a steadystate file or a steady_state_model-block, Dynare may not be
-able to solve the model. Note that simul, perfect_foresight_setup, and perfect_foresight_solver do not
-automatically call the steady state file.] 
-MODEL_DIAGNOSTICS:  The Jacobian of the static model is singular
-MODEL_DIAGNOSTICS:  there is 1 collinear relationships between the variables and the equations
-Collinear variables:
-pi
-r
-Collinear equations
-    19    39
-
-MODEL_DIAGNOSTICS:  The presence of a singularity problem typically indicates that there is one
-MODEL_DIAGNOSTICS:  redundant equation entered in the model block, while another non-redundant equation
-MODEL_DIAGNOSTICS:  is missing. The problem often derives from Walras Law.
 
 EIGENVALUES:
          Modulus             Real        Imaginary
@@ -86,9 +71,9 @@ EIGENVALUES:
        4.914e-16       -4.914e-16                0
           0.1735          -0.1735                0
              0.4              0.4                0
-             0.4              0.4                0
           0.7641           0.7575           0.1004
           0.7641           0.7575          -0.1004
+             0.8              0.8                0
             0.95             0.95                0
             0.95             0.95                0
             0.95             0.95                0
@@ -2457,5 +2442,5 @@ Order           1        2        3        4        5
 gy_obs    -0.0387   0.0437  -0.0244  -0.0414  -0.0516
 pi_obs     0.4827   0.2938   0.1976   0.1362   0.0924
 u_obs      0.8755   0.7621   0.6385   0.5212   0.4143
-Total computing time : 0h01m15s
+Total computing time : 0h02m23s
 Note: warning(s) encountered in MATLAB/Octave code

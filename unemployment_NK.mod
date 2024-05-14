@@ -59,7 +59,7 @@ rho_c	= 0.95;
 rho_m  	= 0.95;
 rho_i	= 0.95;
 rho_r	= 0.40;
-rho_t	= 0.40;
+rho_t	= 0.80;
 
 %----------------------------------------------------------------
 % 3. Model
@@ -200,12 +200,11 @@ steady_state_model;
 end;
 	
 resid;
-model_diagnostics;
 
 check;
 
 
-varobs gy_obs gc_obs pe_obs r_obs gi_obs ; %u_obs pi_obs
+varobs gy_obs gc_obs pe_obs r_obs gi_obs ; 
 
 estimated_params;
 //	PARAM NAME,		INITVAL,	LB,		UB,		PRIOR_SHAPE,		PRIOR_P1,		PRIOR_P2,		PRIOR_P3,		PRIOR_P4,		JSCALE
@@ -215,11 +214,7 @@ estimated_params;
 	rho_c,				.96,    	,		,		beta_pdf,			.5,				0.2;
 	stderr eta_t,       ,           ,       ,       INV_GAMMA_PDF,      .01,            2;
     rho_t,              .5,         ,       ,       beta_pdf,           .5,             0.2;
-    %stderr eta_a,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
-	%rho_a,				.9,     	,		,		beta_pdf,			.5,				0.2;
-	%stderr eta_m,   	,			,		,		INV_GAMMA_PDF,		.01,			0.2;
-	%rho_m,				.9,    		,		,		beta_pdf,			.5,				0.2;
-	stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
+    stderr eta_r,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_r,				.5,    		,		,		beta_pdf,			.5,				0.2;
 	stderr eta_i,   	,			,		,		INV_GAMMA_PDF,		.01,			2;
 	rho_i,				.9,    		,		,		beta_pdf,			.5,				0.2;
@@ -248,7 +243,7 @@ prefilter=1,				% remove the mean in the data
 lik_init=2,					% Don't touch this,
 mh_nblocks=1,				% number of mcmc chains
 forecast=8					% forecasts horizon
-) gy_obs gc_obs r_obs gi_obs pe_obs; %u_obs pi_obs
+) gy_obs gc_obs r_obs gi_obs pe_obs ; 
 
 
 % load estimated parameters
@@ -306,7 +301,7 @@ end
 
 
 %%%%%%%%%%%%%%%%% FORECAST UNDER ALTERNATIVE POLICY %%%%%%%%%%%%%%%%%%
-Thorizon 	= 12; % number of quarters for simulation
+Thorizon 	= 8; % number of quarters for simulation
 % Built baseline forecast
 fx = fieldnames(oo_.SmoothedShocks);
 for ix=1:size(fx,1)
@@ -335,8 +330,8 @@ y_carbon           = simult_(M_,options_,oo_.dr.ys,oo_.dr,ee_matx,options_.order
 
 
 % draw result
-var_names={'lny','lnc','lnpi','u_obs','tau'};
-Ty = [T(1)-Tfreq;T];
+var_names={'lny','lnpi','u_obs','tau', 'lnc'};
+%Ty = [T(1)-Tfreq;T];
 draw_tables(var_names,M_,Tvec2,[2023 Tvec2(end)],y_,y_carbon)
 legend('Estimated','Carbon')
 
