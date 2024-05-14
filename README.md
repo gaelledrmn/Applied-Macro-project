@@ -9,4 +9,9 @@ _Clémence BRIODEAU, Lucie CARLIER and Gaëlle DORMION_
 - main.m: this file is the main one to run in order to replicate the report's results;
 - unemployment_NK.mod: this file contains the description of the unemployment model that we use, and several computing tasks like historical decomposition, forecasting or policy scenario analysis;
 - call_dbnomics.m: this file contains the function that allows us to get data from dbnomics;
-- draw_tables.m: this file contains the function that allows us to draw the graphes for the part of the report regarding policy analysis.  
+- draw_tables.m: this file contains the function that allows us to draw the graphes for the part of the report regarding policy analysis.
+
+## Data:
+
+- Our series come from DNnomics;
+- For ETS prices, we use data provided to us by our instructior. They are available in the file Data_Estimation_2009-2019.xlsx. 
